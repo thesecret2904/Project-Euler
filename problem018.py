@@ -25,7 +25,7 @@ def is_valid(path):
     return True
 
 
-numbers = read_pyramid('problem18_2.txt')
+numbers = read_pyramid('problem018_2.txt')
 path = [0]
 for i in range(1, len(numbers)):
     if numbers[i][path[-1]] > numbers[i][path[-1] + 1]:
