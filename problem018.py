@@ -1,4 +1,7 @@
-# not solved
+import random
+from math import exp
+
+
 def read_pyramid(path):
     numbers = []
     with open(path, 'r') as f:
@@ -25,28 +28,59 @@ def is_valid(path):
     return True
 
 
+def fix_path(path):
+    path[0] = 0
+    for i in range(1, len(numbers)):
+        if path[i] < path[i - 1]:
+            path[i] = path[i - 1]
+        elif path[i] > path[i - 1] + 1:
+            path[i] = path[i - 1] + 1
+    return path
+
+
+def simulated_annealing(init: list, cost: callable, t: float = 15., dt: float = 1e-5, k: float = 2.5):
+    # save initial as best
+    current_best = init.copy()
+    current_best_cost = cost(init)
+    current = init
+    current_cost = current_best_cost
+    # as long as the 'temperature' is positive do
+    while t > 0:
+        # change the current path in one position
+        new = current.copy()
+        random_index = random.randint(1, len(new) - 1)
+        if new[random_index] == new[random_index - 1]:
+            new[random_index] += 1
+        else:
+            new[random_index] -= 1
+        # fix the path as is it may get invalid
+        new = fix_path(new)
+
+        # evaluate the new value
+        new_cost = cost(new)
+        # if new value is better set it as current
+        if new_cost > current_cost:
+            current = new
+            current_cost = current_best_cost
+            # if it is better than the current best, save it as current best
+            if new_cost > current_best_cost:
+                current_best_cost = new_cost
+                current_best = new
+        # if new value is worse still take it with a random chance
+        if random.random() < exp((new_cost - current_cost) / (k * t)):
+            current = new
+            current_cost = new_cost
+        t -= dt
+    return current_best
+
+
 numbers = read_pyramid('problem018_2.txt')
+# generate random (valid) path
 path = [0]
 for i in range(1, len(numbers)):
-    if numbers[i][path[-1]] > numbers[i][path[-1] + 1]:
-        path.append(path[-1])
-    else:
-        path.append(path[-1] + 1)
+    path.append(path[-1] + random.randint(0, 1))
 
 print(is_valid(path), evaluate_path(path))
-
-print(len(numbers), len(numbers[-1]))
-max_total = 0
-for i in range(len(numbers)):
-    total = numbers[-1][i] + numbers[0][0]
-    current_col = i
-    for j in range(len(numbers) - 2, 0, -1):
-        if current_col == j + 1:
-            current_col -= 1
-        elif current_col > 0:
-            if numbers[j][current_col] < numbers[j][current_col - 1]:
-                current_col -= 1
-        total += numbers[j][current_col]
-    if total > max_total:
-        max_total = total
-print(max_total)
+# optimize path with simulated annealing
+path = simulated_annealing(path, evaluate_path)
+print(is_valid(path), evaluate_path(path))
