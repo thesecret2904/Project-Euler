@@ -148,3 +148,6 @@ notes.txt
 
 # Tensorboard
 runs/
+
+# Primes
+primes.txt
