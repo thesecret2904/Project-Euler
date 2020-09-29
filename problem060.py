@@ -1,4 +1,3 @@
-# not yet solved
 def get_primes(n: int):
     with open('primes.txt', 'r') as f:
         p = 0
@@ -25,45 +24,44 @@ def find(value: int):
     return -1
 
 
-def permutations(objects: list, all_permuations=None, current=None, max_length=None):
-    if max_length is None:
-        max_length = len(objects)
-    if current is None:
-        all_permuations = []
-        for i in range(len(objects)):
-            o = objects.copy()
-            current = [o.pop(i)]
-            permutations(o, all_permuations, current, max_length)
-    elif len(objects) == 0 or len(current) == max_length:
-        all_permuations.append(current)
-    else:
-        for i in range(len(objects)):
-            o = objects.copy()
-            c = current.copy()
-            c.append(o.pop(i))
-            permutations(o, all_permuations, c, max_length)
-    return all_permuations
+def check_pair(a, b):
+    p1 = int(str(a) + str(b))
+    p2 = int(str(b) + str(a))
+    if find(p1) < 0:
+        return False
+    if find(p2) < 0:
+        return False
+    return True
 
 
 limit = 10 ** 9
-search_limit = 2 * 10 ** 2
+search_limit = 10 ** 4
 primes = list(get_primes(limit))
 for i in range(1, search_limit):
     for j in range(i + 1, search_limit):
+        if not check_pair(primes[i], primes[j]):
+            continue
         for k in range(j + 1, search_limit):
+            if not check_pair(primes[i], primes[k]):
+                continue
+            if not check_pair(primes[j], primes[k]):
+                continue
             for h in range(k + 1, search_limit):
+                if not check_pair(primes[i], primes[h]):
+                    continue
+                if not check_pair(primes[j], primes[h]):
+                    continue
+                if not check_pair(primes[k], primes[h]):
+                    continue
                 for l in range(h + 1, search_limit):
-                    current = [primes[i], primes[j], primes[k], primes[h], primes[l]]
-                    print(current)
-                    if current == [3, 7, 109, 673]:
-                        print('here')
-                    combinations = permutations(current, max_length=2)
-                    valid = True
-                    for combination in combinations:
-                        to_check = int(''.join([str(i) for i in combination]))
-                        if find(to_check) < 0 or to_check > limit:
-                            valid = False
-                            break
-                    if valid:
-                        print(current, sum(current))
-                        exit()
+                    if not check_pair(primes[i], primes[l]):
+                        continue
+                    if not check_pair(primes[j], primes[l]):
+                        continue
+                    if not check_pair(primes[k], primes[l]):
+                        continue
+                    if not check_pair(primes[h], primes[l]):
+                        continue
+                    print(primes[i], primes[j], primes[k], primes[h], primes[l])
+                    print(sum([primes[i], primes[j], primes[k], primes[h], primes[l]]))
+
