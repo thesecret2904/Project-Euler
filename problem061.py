@@ -1,4 +1,3 @@
-# not solved
 def triangle(n):
     return (n * (n + 1)) // 2
 
@@ -57,31 +56,48 @@ def find_closest(value: int, polygonal):
     return left
 
 
+def permutations(objects: list, all_permuations=[], current=[]):
+    if len(current) == 0:
+        for i in range(len(objects)):
+            o = objects.copy()
+            current = [o.pop(i)]
+            permutations(o, all_permuations, current)
+    elif len(objects) == 0:
+        all_permuations.append(current)
+    else:
+        for i in range(len(objects)):
+            o = objects.copy()
+            c = current.copy()
+            c.append(o.pop(i))
+            permutations(o, all_permuations, c)
+    return all_permuations
+
+
 possible_triangle = [(i, triangle(i)) for i in range(find_closest(1000, triangle), find_closest(10000, triangle))]
 numbers = None
+possible_cycles = permutations([square, pentagonal, hexagonal, heptagonal, octagonal])
+
 for index, number in possible_triangle:
-    if number == 8256:
-        print('here')
-    remaining = [square, pentagonal, hexagonal, heptagonal, octagonal]
-    numbers = [number]
-    indices = [index]
-    while len(remaining) > 0:
-        current = numbers[-1]
-        found = False
-        for i in range(10, 100):
-            to_check = int(str(current)[2:] + str(i))
-            for poly in remaining:
+    for cycle in possible_cycles:
+        numbers = [number]
+        indices = [index]
+        for poly in cycle:
+            current = numbers[-1]
+            found = False
+            for i in range(10, 100):
+                to_check = int(str(current)[2:] + str(i))
                 j = find(to_check, poly)
                 if j > 0 and j not in indices:
                     numbers.append(to_check)
                     indices.append(j)
                     found = True
-                    remaining.remove(poly)
                     break
             if found:
+                continue
+            if not found:
                 break
-        if not found:
+        if found:
             break
-    if len(remaining) == 0 and str(numbers[-1])[2:] == str(numbers[0])[:2]:
+    if len(numbers) == len(possible_cycles[0]) + 1 and str(numbers[-1])[2:] == str(numbers[0])[:2]:
         print(numbers, sum(numbers))
         break
