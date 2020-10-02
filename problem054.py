@@ -151,7 +151,7 @@ def compare(hand1, hand2):
             return 0 if card1 > card2 else 1
 
 
-with open('poker.txt', 'r') as f:
+with open('p054_poker.txt', 'r') as f:
     lines = f.readlines()
 
 count1 = 0

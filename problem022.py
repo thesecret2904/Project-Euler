@@ -1,4 +1,4 @@
-with open('names.txt', 'r') as f:
+with open('p022_names.txt', 'r') as f:
     names = f.readline().replace("\"", "")
 
 names = names.split(',')

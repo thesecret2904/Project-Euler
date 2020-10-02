@@ -1,10 +1,1 @@
-with open('problem013.txt', 'r') as f:
-    lines = f.readlines()
-
-
-numbers = []
-for line in lines:
-    numbers.append(int(line))
-
-s = sum(numbers)
-print(str(s)[:10])
+print(str(sum([int(line) for line in open('p013.txt', 'r').readlines()]))[:10])

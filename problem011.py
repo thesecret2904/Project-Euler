@@ -1,4 +1,4 @@
-with open('problem011.txt', 'r') as f:
+with open('p011.txt', 'r') as f:
     lines = f.readlines()
 
 grid = []

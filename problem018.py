@@ -74,7 +74,7 @@ def simulated_annealing(init: list, cost: callable, t: float = 15., dt: float = 
     return current_best
 
 
-numbers = read_pyramid('problem018_2.txt')
+numbers = read_pyramid('p018_triangle2.txt')
 # generate random (valid) path
 path = [0]
 for i in range(1, len(numbers)):
