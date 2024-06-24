@@ -151,3 +151,7 @@ runs/
 
 # Primes
 primes.txt
+
+.vscode/
+
+*build*/
